@@ -1,0 +1,128 @@
+/* ============================================================
+   scoby — brand tokens
+   The reusable foundation: palette, type, reset, primitives.
+   Import this on every surface (site, board, decks).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  /* ---- fermented earth palette ---- */
+  --loam:    #161009;   /* warm near-black ground */
+  --bark:    #2c2013;   /* deep brown */
+  --clay:    #bb6240;   /* terracotta */
+  --brew:    #d39c46;   /* kombucha amber */
+  --culture: #7e885a;   /* living olive / sage */
+  --mother:  #a55f37;   /* deep rust — the "mother" */
+  --whey:    #ece1cd;   /* warm cream */
+  --whey-2:  #d9cab0;   /* dim cream */
+  --whey-3:  #b9a988;   /* muted */
+
+  --ink:     #161009;
+  --paper:   #ece1cd;
+
+  /* ---- logo recolour hooks (consumed by /logo SVGs) ---- */
+  --scoby-ink:    var(--whey);
+  --scoby-ground: var(--loam);
+
+  --maxw: 1180px;
+
+  --serif: 'Spectral', Georgia, serif;
+  --sans:  'Hanken Grotesk', system-ui, sans-serif;
+  --mono:  'Space Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--loam);
+  color: var(--whey);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+}
+
+/* grain overlay — fixed, non-interactive */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   layout
+   ============================================================ */
+.section { padding: clamp(64px, 9vw, 130px) clamp(24px, 6vw, 88px); }
+.wrap { max-width: var(--maxw); margin: 0 auto; }
+
+.bg-loam   { background: var(--loam);   color: var(--whey); }
+.bg-bark   { background: var(--bark);   color: var(--whey); }
+.bg-paper  { background: var(--paper);  color: var(--ink); }
+.bg-clay   { background: var(--clay);   color: #1c1109; }
+
+.divider { height: 1px; background: currentColor; opacity: 0.14; }
+
+/* ============================================================
+   type primitives
+   ============================================================ */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  opacity: 0.62;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: "";
+  width: 26px; height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  opacity: 0.4;
+}
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.05; }
+
+.h-lead {
+  font-size: clamp(34px, 5vw, 64px);
+  letter-spacing: -0.01em;
+  font-weight: 300;
+}
+.h-lead em { font-style: italic; color: var(--brew); }
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.lede {
+  font-family: var(--serif);
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.55;
+  font-weight: 300;
+  max-width: 30ch;
+}
+.body { font-size: 15.5px; line-height: 1.65; opacity: 0.82; max-width: 46ch; }
+.muted { opacity: 0.6; }
+
+/* concentric disc mark (reusable) */
+.disc { display: block; }
+.disc circle, .disc ellipse { fill: none; }
