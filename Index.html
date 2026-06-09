@@ -211,13 +211,23 @@
 <!-- ====================== STORE ====================== -->
 <section class="store" id="store">
   <div class="store-bg"></div>
-  <div class="store-inner reveal">
-    <h2>The <em>Store</em></h2>
-    <p>Apparel, prints and objects cut from the same culture. Opening soon.</p>
-    <a class="btn" href="#" target="_blank" rel="noopener">
-      Notify me
-      <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-    </a>
+  <div class="store-wrap">
+    <div class="s-head reveal">
+      <h2>The <em>Store</em></h2>
+      <div class="s-num">04 — merch</div>
+    </div>
+    <div class="merch-grid" id="merchGrid">
+      <div class="merch-loading">
+        <span class="merch-spinner"></span>
+        <span>loading</span>
+      </div>
+    </div>
+    <div class="store-cta-row reveal">
+      <a class="btn btn-outline" href="https://scoby-shop.fourthwall.com" target="_blank" rel="noopener">
+        View all products
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -270,12 +280,77 @@
   });
 
   // scroll reveal
-  const io = new IntersectionObserver((entries) => {
+  var io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+
+
+<script>
+  // Fourthwall Storefront — live product fetch
+  (async function initStore() {
+    const SHOP   = 'https://scoby-shop.fourthwall.com';
+    const TOKEN  = 'ptkn_3a196750-ab8f-4147-b5b2-e4873dd0dce3';
+    const grid   = document.getElementById('merchGrid');
+    if (!grid) return;
+
+    try {
+      const res  = await fetch(
+        `https://storefront.fourthwall.com/v1/products?storefront_token=${TOKEN}&currency=USD`
+      );
+      if (!res.ok) throw new Error('API ' + res.status);
+      const data = await res.json();
+
+      const products = (data.results || []).filter(
+        p => p.access && p.access.type === 'Public'
+      );
+
+      if (!products.length) {
+        grid.innerHTML = `<p class="merch-empty">Nothing here yet — check back soon.</p>`;
+        return;
+      }
+
+      grid.innerHTML = products.map(p => {
+        const img   = p.images && p.images[0]
+                        ? (p.images[0].transformedUrl || p.images[0].url)
+                        : '';
+        const v     = p.variants && p.variants[0];
+        const price = v && v.unitPrice
+                        ? '$' + Number(v.unitPrice.value).toFixed(2)
+                        : '';
+        const url   = `${SHOP}/products/${p.slug}`;
+
+        return `<a class="merch-card reveal" href="${url}" target="_blank" rel="noopener">
+          <div class="merch-img">
+            ${img
+              ? `<img src="${img}" alt="${p.name}" loading="lazy" />`
+              : `<div class="merch-img-placeholder"></div>`
+            }
+          </div>
+          <div class="merch-info">
+            <div class="merch-name">${p.name}</div>
+            ${price ? `<div class="merch-price">${price}</div>` : ''}
+          </div>
+          <span class="merch-cta">
+            Shop
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </span>
+        </a>`;
+      }).join('');
+
+      // hook new cards into the existing scroll-reveal observer
+      grid.querySelectorAll('.merch-card').forEach(el => io && io.observe(el));
+
+    } catch (err) {
+      grid.innerHTML = `<p class="merch-empty">
+        Store temporarily unavailable.
+        <a href="https://scoby-shop.fourthwall.com" target="_blank" rel="noopener">Visit directly →</a>
+      </p>`;
+    }
+  })();
 </script>
 
 </body>
