@@ -290,66 +290,79 @@
 
 
 <script>
-  // Fourthwall Storefront — live product fetch
-  (async function initStore() {
-    const SHOP   = 'https://scoby-shop.fourthwall.com';
-    const TOKEN  = 'ptkn_3a196750-ab8f-4147-b5b2-e4873dd0dce3';
-    const grid   = document.getElementById('merchGrid');
+  // Fourthwall merch — hardcoded for reliability (CORS blocks client-side API calls)
+  (function initStore() {
+    const SHOP = 'https://scoby-shop.fourthwall.com';
+    const grid = document.getElementById('merchGrid');
     if (!grid) return;
 
-    try {
-      const res  = await fetch(
-        `https://storefront.fourthwall.com/v1/products?storefront_token=${TOKEN}&currency=USD`
-      );
-      if (!res.ok) throw new Error('API ' + res.status);
-      const data = await res.json();
-
-      const products = (data.results || []).filter(
-        p => p.access && p.access.type === 'Public'
-      );
-
-      if (!products.length) {
-        grid.innerHTML = `<p class="merch-empty">Nothing here yet — check back soon.</p>`;
-        return;
+    const products = [
+      {
+        name:  'Embroidered Tee in Espresso',
+        price: '$23.99',
+        slug:  'scoby-logo-embroidered-tee-in-espresso',
+        img:   'https://imgproxy.fourthwall.dev/1l1_mVfinQ-0-5Ink_fImOMpBqljI0nS9OuYUh_ZSK4/w:800/sm:1/enc/M5fl7-ujLE8ItAD6/GVZR9iMBdDaRk-cy/RlaGqdstFzars9ao/XLVxYai1aczmFBcp/CVgkwVGw3tzau4-q/18Mg9C11_1TQ3cXT/qUEC9T_klAwN0mxt/xFxCEOwlxHe9aF0u/dY_cu3PAZhuzDwf7/7iPcgMWZUdu4AXo7/Sj5Efd96-lv_NLP8/0CuZx-ERmYACTg0y/FxCD6YiauhQHdrTY/v6EDdM3cHciwKgQ7/_-V_6fJSZFE.jpg'
+      },
+      {
+        name:  'Embroidered Sweatshirt in Vintage Black',
+        price: '$34.99',
+        slug:  'scoby-logo-embroidered-sweatshirt-in-vintage-black',
+        img:   'https://imgproxy.fourthwall.dev/1AAZBhg3dOLmp_IPHNLXi65A3XKq1Ap1hgTL0PADkwI/w:800/sm:1/enc/DWhrbqyXabl65Y5j/H1bpvhbQVRHoIZqt/y_bTihEhlJ_8Niew/rtmAkLibPyjld-sf/dSYRbJ-N-Bxnij6p/sTHEMXdD3rOAW5nQ/34UtbmukhbdM_7Dk/pAQBqnLHfydsK3Gk/0W9dbMyzBqe84qP4/1xrtBUYZvpeXtYM2/8haWNkPyCorT5tBG/5XGeoAxygJZlfa_v/RSvKc8oXohR7AseD/-pKKm_koAAoVRjgN/S3s0aU0TQpo.jpg'
+      },
+      {
+        name:  'Tote Bag',
+        price: '$18.99',
+        slug:  'scoby-tote-bag',
+        img:   'https://imgproxy.fourthwall.dev/XdQNV6JV_QY99Zu1wEkHSdcS9ChqcdeV6Xi3l9ed32A/w:800/sm:1/enc/dfgh42fE4sp6bpIk/7haYzq8iQiQVkz6W/KOnVnMbsaO0xKx2t/7MM9VZOYBQpYui5X/tLP44HixgNKSP2dq/UE1Q7uG6TmyZeuV6/VYGRPKPnUogirqGL/ZL5wGDI2nDhaW9Ey/HquEpkIys-tPA9qj/j2IclAT6wk6xUTDq/Auxsy7iEu2nagDSj/ZhHBtabxBt7ONR_L/zbDW-tlRjyuVItR1/XUR1y88G3oEF_y0_/tIxYQVonL0A.jpg'
+      },
+      {
+        name:  'Embroidered Logo Hat',
+        price: '$20.79',
+        slug:  'scoby-logo-embroidered-hat',
+        img:   'https://imgproxy.fourthwall.dev/TuF5UkU5V80uFH6BWYW4nWLwGNZd68X2XaU_u8-l2nk/w:800/sm:1/enc/t-T1C_-YDlLlKg8J/x_Xnf1DVwn0cVmGP/iZBBz5Ffdf9YQuM4/TCIRfHMocFSmbdtw/dEBylL72PSM-t6q8/w52a70uJuXLedLGj/sP7I4OLKNhsWPZ7i/tn2HcrEyePceyXhS/xN6urrlh0MF2Fnql/w7kG7zb1Da8ITuzx/813HC1v3Up5BpB6A/r_gf-2KUFWtAITM6/A2lCAOCSn_8pCKw_/86agQmH9YW-KwODt/ndCBm9X9Jlo.jpg'
+      },
+      {
+        name:  'Logo Mug',
+        price: '$8.95',
+        slug:  'scoby-logo-mug',
+        img:   'https://imgproxy.fourthwall.dev/zKBz9nCmc9ZNrOSsAo-B08KhTT8Og2suINtxBqa04dI/w:800/sm:1/enc/dDXyaYgP4chvQ4sH/Vm7UMteF_E8Uixv5/GJO_vPQ9nSK9YJkq/sT9zfsucV2Opy8Xg/gghRr4e73KAhDZ_y/-FMXPSzq7SAM_BOL/AiBQ2NIYol5NeCJb/ilyci1T8JK3EWpA2/UV5ZOtRmiMrgk2LZ/YWIbuybTQXgIoyub/fLbz0h78TYJguPSM/NsyhcIDEvsqZbmbx/L9TwgP5cGgc3UJZU/1tIGJfzrDXNPN-z6/kpRW5r8txYQ.jpg'
+      },
+      {
+        name:  'Embroidered Tee in Ivory',
+        price: '$23.99',
+        slug:  'scoby-logo-embroidered-tee-in-ivory',
+        img:   'https://imgproxy.fourthwall.dev/HLx7emFcAvgiInRnhC9tulIchk3Pd3Ylxl-SFGqW8rg/w:800/sm:1/enc/NfThtPr2QfJ1_1II/bXOmiQqAbDj0P7oV/uOAGnXGnqPSsvGSU/4iTxzLgLLmGVGMHW/9Aq0UmBhY6LpPvdt/FFBswMu4FG1sI5r2/pg4rIA4qlfY_fW0q/TfUHbE8lYurtUY18/OoRStBvRg2Nkzp6t/a2SC148mEVJGWHqg/sUHHd5KnWXLK17g2/ynHDNaPe9IJAZiYX/bDz6E-gBbeSCChYO/AAWnWYUOAEYz8cCG/DdrSWBtbJU4.jpg'
+      },
+      {
+        name:  'Logo Socks in Brown',
+        price: '$12.95',
+        slug:  'scoby-logo-socks-in-brown',
+        img:   'https://imgproxy.fourthwall.dev/5un6yI86mCGK9Po_YKnU1hfh3HybuTXzv1UFX02Dca0/w:800/sm:1/enc/EfBllJIQisYYtlZp/hkWs_klbxpj5oI_M/Wa-tkIyqSvNQK9OE/l10JgiUX72m9kJM2/vFXS78RyZ4TnqiBB/cCm4jrUILC26ZarE/F4aPJfV8BsZliDrG/gt9n4t-g_XcD3J52/IG3yXIPoYWMTjgAP/yfL7iKzjfUMb_JKw/GvvgY7e0wziPL64I/lAJR52M0QKTY8TbH/GL266eeGl-UTWwiv/djz7W3fFQYbi-odN/PKJr1qmZ8i8.jpg'
+      },
+      {
+        name:  'Embroidered Tee in Blue Spruce',
+        price: '$23.99',
+        slug:  'scoby-logo-embroidered-tee-in-blue-spruce',
+        img:   'https://imgproxy.fourthwall.dev/nTCr6yR0WEoekhPXoHkBtok19dsqDK6ITcZrJMPhGAE/w:800/sm:1/enc/DULnkycf1HOSLRqZ/ddJ3tuRYt0a-G2Dn/LbRa3SGeQnyk3smt/XHlxphcPHS6ffyUW/_6qNXN4ARwuFqvM-/UfC-6-Sd2bjnQAQ-/yi-fa6ltgMKCIoBq/HY2tESQIkIdBBkSh/UAzantO5ZRJG3gwU/HvjusjAt9fb3jSJi/chMEO3qF7ZZsxzj6/jBmJgtDDFSMdH0dL/JTRP7VscHkZuZ7qE/I78zRLL-ag4QwIoZ/RaMVQ-jXN38.jpg'
       }
+    ];
 
-      grid.innerHTML = products.map(p => {
-        const img   = p.images && p.images[0]
-                        ? (p.images[0].transformedUrl || p.images[0].url)
-                        : '';
-        const v     = p.variants && p.variants[0];
-        const price = v && v.unitPrice
-                        ? '$' + Number(v.unitPrice.value).toFixed(2)
-                        : '';
-        const url   = `${SHOP}/products/${p.slug}`;
+    grid.innerHTML = products.map(p => `
+      <a class="merch-card reveal" href="${SHOP}/products/${p.slug}" target="_blank" rel="noopener">
+        <div class="merch-img">
+          <img src="${p.img}" alt="${p.name}" loading="lazy" referrerpolicy="no-referrer" />
+        </div>
+        <div class="merch-info">
+          <div class="merch-name">${p.name}</div>
+          <div class="merch-price">${p.price}</div>
+        </div>
+        <span class="merch-cta">
+          Shop
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </span>
+      </a>`).join('');
 
-        return `<a class="merch-card reveal" href="${url}" target="_blank" rel="noopener">
-          <div class="merch-img">
-            ${img
-              ? `<img src="${img}" alt="${p.name}" loading="lazy" />`
-              : `<div class="merch-img-placeholder"></div>`
-            }
-          </div>
-          <div class="merch-info">
-            <div class="merch-name">${p.name}</div>
-            ${price ? `<div class="merch-price">${price}</div>` : ''}
-          </div>
-          <span class="merch-cta">
-            Shop
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-          </span>
-        </a>`;
-      }).join('');
-
-      // hook new cards into the existing scroll-reveal observer
-      grid.querySelectorAll('.merch-card').forEach(el => io && io.observe(el));
-
-    } catch (err) {
-      grid.innerHTML = `<p class="merch-empty">
-        Store temporarily unavailable.
-        <a href="https://scoby-shop.fourthwall.com" target="_blank" rel="noopener">Visit directly →</a>
-      </p>`;
-    }
+    grid.querySelectorAll('.merch-card').forEach(el => io && io.observe(el));
   })();
 </script>
 
