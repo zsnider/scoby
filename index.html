@@ -41,6 +41,31 @@
 
 <!-- ====================== HERO ====================== -->
 <header class="hero" id="top">
+
+  <!-- crawling fractal background — sits behind wordmark -->
+  <div class="hero-fractal" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="hf" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.007 0.005" numOctaves="5" seed="4">
+            <animate attributeName="baseFrequency"
+              values="0.007 0.005; 0.010 0.007; 0.006 0.004; 0.009 0.006; 0.007 0.005"
+              dur="42s" repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.45 0 0.55 1; 0.45 0 0.55 1; 0.45 0 0.55 1; 0.45 0 0.55 1"/>
+          </feTurbulence>
+          <!-- map noise to warm dark amber tones matching --loam palette -->
+          <feColorMatrix type="matrix"
+            values="0.20 0 0 0 0.06
+                    0.12 0 0 0 0.03
+                    0.04 0 0 0 0.01
+                    0    0 0 1 0"/>
+        </filter>
+      </defs>
+      <rect width="100%" height="100%" filter="url(#hf)"/>
+    </svg>
+  </div>
+
   <div class="hero-mark">
     <div class="ripple-field" id="rippleField" aria-hidden="true"></div>
     <div class="wordmark" id="wordmark" style="--fg:#ece1cd;--bg:#161009; transform: translateX(30px);" role="img" aria-label="scoby">
@@ -176,9 +201,9 @@
     <div class="contact-inner">
       <div class="reveal">
         <p class="contact-lead">Bookings, collaborations &amp; <em>everything else</em>.</p>
-        <a class="contact-email" href="mailto:scobysnacksmusic@gmail.com">
+        <a class="contact-email" id="contactEmail" href="#">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 10 6 10-6"></path></svg>
-          <span>scobysnacksmusic@gmail.com</span>
+          <span id="contactEmailText"></span>
         </a>
         <div class="contact-note">Management &amp; booking inquiries</div>
       </div>
@@ -251,6 +276,18 @@
   </div>
 </footer>
 
+<script>
+  // email obfuscation — assembled at runtime so bots don't harvest plain text
+  (function() {
+    var u = ['scoby','snacks','music'].join('');
+    var d = ['gmail','.com'].join('');
+    var addr = u + '@' + d;
+    var el = document.getElementById('contactEmail');
+    var tx = document.getElementById('contactEmailText');
+    if (el) el.href = 'mai' + 'lto:' + addr;
+    if (tx) tx.textContent = addr;
+  })();
+</script>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // nav background on scroll
   const nav = document.getElementById('nav');
