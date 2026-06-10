@@ -461,7 +461,30 @@ html.js .reveal.in { opacity: 1; transform: none; }
 /* ============================================================
    ABOUT
    ============================================================ */
-.about { background: var(--bark); }
+.about {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(60px, 9vh, 110px);
+  padding-bottom: clamp(60px, 9vh, 110px);
+}
+.about > .s-wrap {
+  position: relative;
+  z-index: 2;
+}
+.about-bg {
+  position: absolute; inset: 0;
+  background-image: url("photos/about-bg.jpg");
+  background-size: cover;
+  background-position: center 30%;
+  filter: saturate(0.7) contrast(1.05) brightness(0.22);
+}
+.about-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(80% 80% at 50% 50%, transparent, color-mix(in srgb, var(--bark) 80%, transparent)),
+    linear-gradient(color-mix(in srgb, var(--bark) 50%, transparent), color-mix(in srgb, var(--loam) 70%, transparent));
+}
 .about-grid {
   display: grid;
   grid-template-columns: 1fr minmax(0, 0.82fr);
@@ -470,21 +493,13 @@ html.js .reveal.in { opacity: 1; transform: none; }
 }
 .about-photo {
   position: relative;
-  border-radius: 3px;
-  overflow: hidden;
-  box-shadow: 0 50px 100px -50px rgba(0,0,0,0.9);
+  max-width: 75%;
+  margin-left: 70px;
 }
 .about-photo img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  filter: saturate(0.94) contrast(1.04);
-}
-.about-photo::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(150deg, transparent 55%, color-mix(in srgb, var(--mother) 30%, transparent));
-  mix-blend-mode: multiply;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
 }
 .about-body p {
   font-family: var(--serif);
@@ -825,4 +840,20 @@ html.js .reveal.in { opacity: 1; transform: none; }
   .s-num { padding-top: 0; }
   .merch-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
   .merch-name { font-size: 15px; }
+}
+
+/* ============================================================
+   SPOTIFY EMBED
+   ============================================================ */
+.spotify-embed {
+  margin-bottom: 64px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.spotify-embed iframe {
+  display: block;
+  width: 100%;
+  height: 380px;
+  border: 0;
+  border-radius: 14px;
 }
