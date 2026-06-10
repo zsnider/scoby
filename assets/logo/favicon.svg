@@ -1,0 +1,13 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <title>scoby</title>
+  <circle cx="50" cy="50" r="50" fill="#161009"/>
+  <g fill="none" stroke="#ece1cd">
+    <circle cx="50" cy="50" r="44" stroke-width="1.4"/>
+    <circle cx="50" cy="50" r="37" stroke-width="3"/>
+    <circle cx="50" cy="50" r="30" stroke-width="1.4"/>
+    <circle cx="50" cy="50" r="24" stroke-width="2.2"/>
+    <circle cx="50.6" cy="49.4" r="17.5" stroke-width="1.4"/>
+    <circle cx="50" cy="50" r="10.5" stroke-width="2.6"/>
+  </g>
+  <circle cx="50.4" cy="49.6" r="4" fill="#ece1cd"/>
+</svg>
